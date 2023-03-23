@@ -55,14 +55,14 @@ app.post('/users', (req, res) => {
         res.send({error : 'Missing fields.'});
     }
     else {
-        db.findOne({username : {$exists: true}})
+        db.findOne({username : req.params.username})
         .then(doc => {
             if(doc) {
                 res.send({error : 'Username already exists.'});
             }
             else {
                 db.insertOne(user)
-                .then(doc => res.send({username : doc.username}))
+                .then(doc => res.send(doc))
                 .catch(error => res.send({error}));
             }
         })

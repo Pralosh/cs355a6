@@ -139,7 +139,7 @@ $('#deleteBtn').addEventListener('click',()=>{
             showError(doc.error);
         }
         else {
-            openLoginScreen();
+            openLoginScreen(doc);
         }
     })
     .catch(err => showError('Error: ' + err));
