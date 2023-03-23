@@ -25,6 +25,20 @@ $('#loginBtn').addEventListener('click',()=>{
     //       call showError('Username and password do not match.')
     //     otherwise, call openHomeScreen(doc)
     //   use .catch(err=>showError('ERROR: '+err)}) to show any other errors
+    fetch("/users/${$('#loginUsername').value}")
+    .then(response => response.json())
+    .then(doc => {
+      if(doc.error) {
+        showError(doc.error);
+      }
+      else if(doc.password !== $('#loginPassword').value) {
+        showError('Username and password do not match.');
+      }
+      else {
+        openHomeScreen(doc);
+      }
+    })
+    .catch(err => showError('ERROR: ' + err));
 });
 
 // Register button action
@@ -51,6 +65,21 @@ $('#registerBtn').addEventListener('click',()=>{
     //     if doc.error, showError(doc.error)
     //     otherwise, openHomeScreen(doc)
     //   use .catch(err=>showError('ERROR: '+err)}) to show any other errors
+    fetch('/users', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        header: {'Content-type' : 'application/json'}
+    })
+    .then(response => response.json())
+    .then(doc => {
+        if(doc.error) {
+            showError(doc.error);
+        }
+        else {
+            openHomeScreen(doc);
+        }
+    })
+    .catch(err => showError('ERROR' + err));
 });
 
 // Update button action
@@ -73,6 +102,21 @@ $('#updateBtn').addEventListener('click',()=>{
     //     otherwise, if doc.ok,
     //       alert("Your name and email have been updated.");
     //   use .catch(err=>showError('ERROR: '+err)}) to show any other errors
+    fetch("/users/${$('#username').innerText}", {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+        header: {'Content-type' : 'application/json'}
+    })
+    .then(response => response.json())
+    .then(doc => {
+        if(doc.error) {
+            showError(doc.error);
+        }
+        else if(doc.ok) {
+            alert("Your name and email have beeen updated.")
+        }
+    })
+    .catch(err => showError('Error:' + err));
 });
 
 // Delete button action
@@ -86,6 +130,19 @@ $('#deleteBtn').addEventListener('click',()=>{
     //     if doc.error, showError(doc.error)
     //     otherwise, openLoginScreen()
     //   use .catch(err=>showError('ERROR: '+err)}) to show any other errors
+    fetch("/users/${$('#username').innerText}", {
+        method: 'DELETE'
+    })
+    .then(response => response.json())
+    .then(doc => {
+        if(doc.error) {
+            showError(doc.error);
+        }
+        else {
+            openLoginScreen();
+        }
+    })
+    .catch(err => showError('Error: ' + err));
 });
 
 function showListOfUsers(){
@@ -96,6 +153,12 @@ function showListOfUsers(){
     //       you can do this by using a for-loop or, better yet, a forEach function:
     //         docs.forEach(showUserInList)
     //   use .catch(err=>showError('Could not get user list: '+err)}) to show any potential errors
+    fetch('/users')
+    .then(response => response.json())
+    .then(docs => {
+        docs.forEach(showUserInList);
+    })
+    .catch(err => showError('Could not get user list: ' + err));
 }
 
 function showUserInList(doc){
