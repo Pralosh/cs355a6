@@ -50,12 +50,14 @@ app.get('/users/:username', (req, res) => {
 //   use .catch(error=>res.send({error})) to catch and send other errors
 app.post('/users', (req, res) => {
     const user = req.body;
-
-    if(!user.hasOwnProperty('username') || !user.hasOwnProperty('password') || !user.hasOwnProperty('email') || !user.hasOwnProperty('name')) {
+    if(!user.hasOwnProperty('username') || 
+        !user.hasOwnProperty('password') ||
+        !user.hasOwnProperty('email') || 
+        !user.hasOwnProperty('name')) {
         res.send({error : 'Missing fields.'});
     }
     else {
-        db.findOne({username : req.params.username})
+        db.findOne({username : {$exists : true}})
         .then(doc => {
             if(doc) {
                 res.send({error : 'Username already exists.'});
@@ -100,7 +102,7 @@ app.patch('/users/:username', (req, res) => {
 //     otherwise, send {ok:true}
 //   use .catch(error=>res.send({error})) to catch and send other errors
 app.delete('/users/:username', (req, res) => {
-    db.deleteOne({username : req.params.username})
+    db.deleteOne({username : {$exists : true}})
     .then(result => {
         if(result == 0) {
             res.send({error : 'Something went wrong.'});

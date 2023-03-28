@@ -25,8 +25,8 @@ $('#loginBtn').addEventListener('click',()=>{
     //       call showError('Username and password do not match.')
     //     otherwise, call openHomeScreen(doc)
     //   use .catch(err=>showError('ERROR: '+err)}) to show any other errors
-    fetch("/users/${$('#loginUsername').value}")
-    .then(response => response.json())
+    fetch("/users/"+$('#loginUsername').value)
+    .then(res => res.json())
     .then(doc => {
       if(doc.error) {
         showError(doc.error);
@@ -68,9 +68,9 @@ $('#registerBtn').addEventListener('click',()=>{
     fetch('/users', {
         method: 'POST',
         body: JSON.stringify(data),
-        header: {'Content-type' : 'application/json'}
+        headers: {'Content-Type' : 'application/json'}
     })
-    .then(response => response.json())
+    .then(res => res.json())
     .then(doc => {
         if(doc.error) {
             showError(doc.error);
@@ -102,12 +102,12 @@ $('#updateBtn').addEventListener('click',()=>{
     //     otherwise, if doc.ok,
     //       alert("Your name and email have been updated.");
     //   use .catch(err=>showError('ERROR: '+err)}) to show any other errors
-    fetch("/users/${$('#username').innerText}", {
+    fetch("/users/"+$('#username').innerText, {
         method: 'PATCH',
         body: JSON.stringify(data),
-        header: {'Content-type' : 'application/json'}
+        headers: {'Content-Type' : 'application/json'}
     })
-    .then(response => response.json())
+    .then(res => res.json())
     .then(doc => {
         if(doc.error) {
             showError(doc.error);
@@ -130,10 +130,10 @@ $('#deleteBtn').addEventListener('click',()=>{
     //     if doc.error, showError(doc.error)
     //     otherwise, openLoginScreen()
     //   use .catch(err=>showError('ERROR: '+err)}) to show any other errors
-    fetch("/users/${$('#username').innerText}", {
+    fetch("/users/"+('#username').innerText, {
         method: 'DELETE'
     })
-    .then(response => response.json())
+    .then(res => res.json())
     .then(doc => {
         if(doc.error) {
             showError(doc.error);
@@ -154,7 +154,7 @@ function showListOfUsers(){
     //         docs.forEach(showUserInList)
     //   use .catch(err=>showError('Could not get user list: '+err)}) to show any potential errors
     fetch('/users')
-    .then(response => response.json())
+    .then(res => res.json())
     .then(docs => {
         docs.forEach(showUserInList);
     })
